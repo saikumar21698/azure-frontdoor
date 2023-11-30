@@ -10,13 +10,13 @@ resource "azurerm_app_service_plan" "app_service_plan" {
 }
 
 resource "azurerm_app_service" "app_service" {
-  name                = "mywebapp-453627 "
+  name                = "var.app_svc_name"
   location            = azurerm_resource_group.resource_group.location
   resource_group_name = azurerm_resource_group.resource_group.name
   app_service_plan_id = azurerm_app_service_plan.app_service_plan.id
 }
-resource "azurerm_frontdoor" "votingdemofd" {
-  name                                         = digitalsign
+resource "azurerm_frontdoor" "digitalsign" {
+  name                                         = var.front_end_point
   resource_group_name                          = azurerm_resource_group.rg.name
   enforce_backend_pools_certificate_name_check = false
 
@@ -24,7 +24,7 @@ resource "azurerm_frontdoor" "votingdemofd" {
     name               = "digitalsignRoutingRule1"
     accepted_protocols = ["Https"]
     patterns_to_match  = ["/*"]
-    frontend_endpoints = [digitalsign]
+    frontend_endpoints = [var.front_end_point]
     forwarding_configuration {
       forwarding_protocol = "HttpsOnly"
       backend_pool_name   = "digitalsignBackend"
@@ -67,5 +67,12 @@ resource "azurerm_frontdoor" "votingdemofd" {
   }
 }
 
+variable "app_svc_name" {
+  type = string
+}
 
+variable "front_end_point" {
+  type = string
+}
 
+app_svc_name = "<azure-app-service-name>"
