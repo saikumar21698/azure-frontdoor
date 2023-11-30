@@ -1,23 +1,21 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 0.11"
-    }
-  }
-  backend "azurerm" {
-    resource_group_name = var.bkstrgrg
-    storage_account_name = var.bkstrg
-    container_name = var.bkcontainer
-    key = var.bkstrgkey
+resource "azurerm_app_service_plan" "app_service_plan" {
+  name                = "myappservice-plan"
+  location            = azurerm_resource_group.resource_group.location
+  resource_group_name = azurerm_resource_group.resource_group.name
+
+  sku {
+    tier = "Standard"
+    size = "S1"
   }
 }
 
-provider "azurerm" {    
-  features {}    
+resource "azurerm_app_service" "app_service" {
+  name                = "mywebapp-453627 "
+  location            = azurerm_resource_group.resource_group.location
+  resource_group_name = azurerm_resource_group.resource_group.name
+  app_service_plan_id = azurerm_app_service_plan.app_service_plan.id
 }
 
-resource "azurerm_resource_group" "resource_group" {
-  name     = "app-service-rg"
-  location = "East US"
-}
+
+
+
